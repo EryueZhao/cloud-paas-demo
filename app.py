@@ -104,6 +104,19 @@ def index():
         product_name = request.form.get("product_name", "")
         result = analyze_product(product_name)
 
+    result_html = ""
+    if result:
+        result_html = f"""
+        <div class="result">
+            <h2>分析结果：{product_name}</h2>
+            <div class="item"><span class="label">服务层次：</span>{result["level"]}</div>
+            <div class="item"><span class="label">主要功能：</span>{result["function"]}</div>
+            <div class="item"><span class="label">优点：</span>{result["advantages"]}</div>
+            <div class="item"><span class="label">不足：</span>{result["limits"]}</div>
+            <div class="item"><span class="label">适用场景：</span>{result["scenes"]}</div>
+        </div>
+        """
+
     return f"""
     <!DOCTYPE html>
     <html lang="zh-CN">
@@ -118,8 +131,8 @@ def index():
                 padding: 0;
             }}
             .container {{
-                width: 760px;
-                margin: 60px auto;
+                width: 820px;
+                margin: 50px auto;
                 background: white;
                 padding: 35px;
                 border-radius: 16px;
@@ -138,7 +151,7 @@ def index():
             form {{
                 display: flex;
                 gap: 10px;
-                margin-bottom: 25px;
+                margin-bottom: 18px;
             }}
             input {{
                 flex: 1;
@@ -163,12 +176,14 @@ def index():
                 color: #777;
                 font-size: 14px;
                 margin-bottom: 25px;
+                line-height: 1.7;
             }}
             .result {{
                 background: #f8fbff;
                 border-left: 5px solid #2f6fed;
                 padding: 20px;
                 border-radius: 8px;
+                margin-bottom: 25px;
             }}
             .result h2 {{
                 margin-top: 0;
@@ -181,6 +196,17 @@ def index():
             .label {{
                 font-weight: bold;
                 color: #333;
+            }}
+            .arch {{
+                background: #fff8ed;
+                border-left: 5px solid #f0a429;
+                padding: 20px;
+                border-radius: 8px;
+                margin-top: 20px;
+            }}
+            .arch h2 {{
+                color: #8a5a00;
+                margin-top: 0;
             }}
             .footer {{
                 margin-top: 30px;
@@ -204,16 +230,15 @@ def index():
                 可测试产品：阿里云 ECS、Amazon EC2、Render、阿里云 SAE、Zapier、简道云、Microsoft 365、钉钉、阿里云百炼、通义听悟
             </div>
 
-            {f'''
-            <div class="result">
-                <h2>分析结果：{product_name}</h2>
-                <div class="item"><span class="label">服务层次：</span>{result["level"]}</div>
-                <div class="item"><span class="label">主要功能：</span>{result["function"]}</div>
-                <div class="item"><span class="label">优点：</span>{result["advantages"]}</div>
-                <div class="item"><span class="label">不足：</span>{result["limits"]}</div>
-                <div class="item"><span class="label">适用场景：</span>{result["scenes"]}</div>
+            {result_html}
+
+            <div class="arch">
+                <h2>本应用对应的智能化四层架构</h2>
+                <div class="item"><span class="label">AI IaaS：</span>底层云计算资源提供应用运行和后续模型推理所需算力。</div>
+                <div class="item"><span class="label">AI PaaS：</span>本次使用 Render 部署 Flask Web 应用，实现云端运行和公网访问。</div>
+                <div class="item"><span class="label">MaaS：</span>课程演示版本暂时使用本地知识库模拟，后续可接入阿里云百炼等大模型服务。</div>
+                <div class="item"><span class="label">AI SaaS：</span>用户通过网页直接使用“云服务学习助手”，获得产品分析结果。</div>
             </div>
-            ''' if result else ''}
 
             <div class="footer">
                 本系统为云计算课程作业演示版本，主要用于辅助理解 IaaS、PaaS、SaaS、MaaS 等云服务层次。
